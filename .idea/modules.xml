@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/easyfunding.iml" filepath="$PROJECT_DIR$/.idea/easyfunding.iml" />
+      <module fileurl="file://$PROJECT_DIR$/srb/guigu-common/guigu-common.iml" filepath="$PROJECT_DIR$/srb/guigu-common/guigu-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/srb/service-base/service-base.iml" filepath="$PROJECT_DIR$/srb/service-base/service-base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/srb/service-core/service-core.iml" filepath="$PROJECT_DIR$/srb/service-core/service-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/srb/srb.iml" filepath="$PROJECT_DIR$/srb/srb.iml" />
+    </modules>
+  </component>
+</project>

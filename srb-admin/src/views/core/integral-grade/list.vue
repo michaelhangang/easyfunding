@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    Points Level List
+      <el-table :data="list" border stripe>
+      <el-table-column type="index" width="50" />
+      <el-table-column prop="borrowAmount" label="Loan Amount" />
+      <el-table-column prop="integralStart" label="Points Start" />
+      <el-table-column prop="integralEnd" label="Points End" />
+    </el-table>
   </div>
 </template>
 <script>
