@@ -7,13 +7,18 @@
         size="mini"
         icon="el-icon-download"
       >
-        导入Excel
+        Import Excel
       </el-button>
+      <el-button
+        @click="exportData"
+        type="primary"
+        size="mini"
+        icon="el-icon-upload2" >Export Excel</el-button>
     </div>
 
-    <el-dialog title="数据字典导入" :visible.sync="dialogVisible" width="30%">
+    <el-dialog title="Data Dict Import" :visible.sync="dialogVisible" width="30%">
       <el-form>
-        <el-form-item label="请选择Excel文件">
+        <el-form-item label="Select Excel File">
           <el-upload
             :auto-upload="true"
             :multiple="false"
@@ -25,13 +30,13 @@
             name="file"
             accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           >
-            <el-button size="small" type="primary">点击上传</el-button>
+            <el-button size="small" type="primary">Upload</el-button>
           </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">
-          取消
+          Cancel
         </el-button>
       </div>
     </el-dialog>
@@ -49,14 +54,13 @@ export default {
   },
 
   methods: {
-    // 上传多于一个文件时
     fileUploadExceed() {
-      this.$message.warning('只能选取一个文件')
+      this.$message.warning('Only Select One File')
     },
 
     fileUploadSuccess(response) {
       if (response.code === 0) {
-        this.$message.success('数据导入成功')
+        this.$message.success('Success')
         this.dialogVisible = false
       } else {
         this.$message.error(response.message)
@@ -64,7 +68,11 @@ export default {
     },
 
     fileUploadError() {
-      this.$message.error('数据导入失败')
+      this.$message.error('Failed')
+    },
+
+    exportData() {
+      window.location.href = this.BASE_API + '/admin/core/dict/export'
     }
   }
 }
