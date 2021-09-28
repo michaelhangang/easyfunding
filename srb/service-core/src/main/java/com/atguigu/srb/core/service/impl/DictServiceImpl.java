@@ -9,17 +9,24 @@ import com.atguigu.srb.core.service.DictService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
 public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements DictService {
+    @Resource
+    private RedisTemplate redisTemplate;
+
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public void importData(InputStream inputStream) {
@@ -41,11 +48,30 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
     @Override
     public List<Dict> listByParentId(Long parentId) {
-        List<Dict> dictList = baseMapper.selectList(new QueryWrapper<Dict>().eq("parent_id", parentId));
+        List<Dict> dictList = null;
+        try {
+            dictList = (List<Dict>)redisTemplate.opsForValue().get("srb:core:dictList:" + parentId);
+            if(dictList != null){
+                log.info("Get values from redis");
+                return dictList;
+            }
+        } catch (Exception e) {
+            log.error("Redis server exception：" + ExceptionUtils.getStackTrace(e));
+        }
+
+        log.info("Get Value From Database");
+        dictList = baseMapper.selectList(new QueryWrapper<Dict>().eq("parent_id", parentId));
         dictList.forEach(dict -> {
             boolean hasChildren = this.hasChildren(dict.getId());
             dict.setHasChildren(hasChildren);
         });
+
+        try {
+            redisTemplate.opsForValue().set("srb:core:dictList:" + parentId, dictList, 5, TimeUnit.MINUTES);
+            log.info("Data saved in redis");
+        } catch (Exception e) {
+            log.error("Redis server exception：" + ExceptionUtils.getStackTrace(e));//此处不抛出异常，继续执行后面的代码
+        }
         return dictList;
     }
 
