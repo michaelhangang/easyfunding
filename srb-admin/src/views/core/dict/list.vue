@@ -2,18 +2,24 @@
   <div class="app-container">
     <div style="margin-bottom: 10px;">
       <el-button
-        @click="dialogVisible = true"
         type="primary"
         size="mini"
         icon="el-icon-download"
+        @click="dialogVisible = true"
       >
         Import Excel
       </el-button>
       <el-button
-        @click="exportData"
         type="primary"
         size="mini"
-        icon="el-icon-upload2" >Export Excel</el-button>
+        icon="el-icon-upload2"
+        @click="exportData"
+      >Export Excel</el-button>
+      <el-table :data="list" border row-key="id" lazy :load="getChildren">
+        <el-table-column label="名称" align="left" prop="name" />
+        <el-table-column label="编码" prop="dictCode" />
+        <el-table-column label="值" align="left" prop="value" />
+      </el-table>
     </div>
 
     <el-dialog title="Data Dict Import" :visible.sync="dialogVisible" width="30%">
@@ -44,15 +50,19 @@
 </template>
 
 <script>
+import dictApi from '@/api/core/dict'
 export default {
   // 定义数据
   data() {
     return {
       dialogVisible: false,
-      BASE_API: process.env.VUE_APP_BASE_API
+      BASE_API: process.env.VUE_APP_BASE_API,
+      list: []
     }
   },
-
+  created() {
+    this.fetchData()
+  },
   methods: {
     fileUploadExceed() {
       this.$message.warning('Only Select One File')
@@ -60,8 +70,9 @@ export default {
 
     fileUploadSuccess(response) {
       if (response.code === 0) {
-        this.$message.success('Success')
+        this.$message.success('Data Import Success!')
         this.dialogVisible = false
+        this.fetchData()
       } else {
         this.$message.error(response.message)
       }
@@ -73,6 +84,18 @@ export default {
 
     exportData() {
       window.location.href = this.BASE_API + '/admin/core/dict/export'
+    },
+    // 调用api层获取数据库中的数据
+    fetchData() {
+      dictApi.listByParentId(1).then(response => {
+        this.list = response.data.list
+      })
+    },
+
+    getChildren(row, treeNode, resolve) {
+      dictApi.listByParentId(row.id).then(response => {
+        resolve(response.data.list)
+      })
     }
   }
 }

@@ -1,24 +1,17 @@
 package com.atguigu.srb.core.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-/**
- * <p>
- * 数据字典
- * </p>
- *
- * @author Ganghan
- * @since 2021-09-26
- */
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="Dict对象", description="数据字典")
@@ -53,5 +46,8 @@ public class Dict implements Serializable {
     @TableLogic
     private Boolean deleted;
 
+    @ApiModelProperty(value = "是否包含子节点")
+    @TableField(exist = false)//在数据库表中忽略此列
+    private boolean hasChildren;
 
 }
