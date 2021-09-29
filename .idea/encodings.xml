@@ -4,6 +4,8 @@
     <file url="file://$PROJECT_DIR$/srb/guigu-common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/srb/service-base/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/srb/service-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/srb/service-oss/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/srb/service-sms/src/main/java" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

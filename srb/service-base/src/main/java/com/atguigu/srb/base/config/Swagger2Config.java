@@ -37,4 +37,26 @@ public class Swagger2Config {
                 .contact(new Contact("Gang Han", "http://atguigu.com", "michael.hangang@gmail.com"))
                 .build();
     }
+
+    @Bean
+    public Docket apiConfig(){
+
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("api")
+                .apiInfo(apiInfo())
+                .select()
+                .paths(Predicates.and(PathSelectors.regex("/api/.*")))
+                .build();
+
+    }
+
+    private ApiInfo apiInfo(){
+
+        return new ApiInfoBuilder()
+                .title("Easyfunding-API Doc")
+                .description("")
+                .version("1.0")
+                .contact(new Contact("Gang Han", "http://atguigu.com", "michael.hangang@gmail.com"))
+                .build();
+    }
 }

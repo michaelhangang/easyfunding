@@ -1,0 +1,15 @@
+server:
+  port: 8130
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: service-oss
+
+aliyun:
+  oss:
+    endpoint:
+    keyId:
+    keySecret: keysecret
+    bucketName: srb-file
