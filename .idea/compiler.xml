@@ -8,17 +8,22 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="service-core" />
-        <module name="service-oss" />
         <module name="service-base" />
         <module name="service-sms" />
         <module name="guigu-common" />
+      </profile>
+      <profile name="Annotation profile for srb" enabled="true">
+        <sourceOutputDir name="../target/generated-sources/annotations" />
+        <sourceTestOutputDir name="../target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="service-oss" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8">
       <module name="guigu-common" target="1.8" />
       <module name="service-base" target="1.8" />
       <module name="service-core" target="1.8" />
-      <module name="service-oss" target="1.8" />
+      <module name="service-oss" target="8" />
       <module name="service-sms" target="1.8" />
       <module name="srb" target="1.8" />
     </bytecodeTargetLevel>

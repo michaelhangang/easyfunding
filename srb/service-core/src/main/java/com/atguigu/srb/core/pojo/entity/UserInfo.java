@@ -1,15 +1,16 @@
 package com.atguigu.srb.core.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -24,7 +25,8 @@ import lombok.EqualsAndHashCode;
 @ApiModel(value="UserInfo对象", description="用户基本信息")
 public class UserInfo implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    public static final Integer STATUS_NORMAL = 1;
+    public static final Integer STATUS_LOCKED = 0;
 
     @ApiModelProperty(value = "编号")
       @TableId(value = "id", type = IdType.AUTO)

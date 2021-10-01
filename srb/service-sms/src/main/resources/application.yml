@@ -9,7 +9,7 @@ spring:
 
   #spring:
   redis:
-    host: 192.168.100.100
+    host: 192.168.40.128
     port: 6379
     database: 0
     password:

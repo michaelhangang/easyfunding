@@ -53,6 +53,7 @@
             <groupId>org.apache.xmlbeans</groupId>
             <artifactId>xmlbeans</artifactId>
         </dependency>
+
     </dependencies>
     <build>
         <!-- 项目打包时会将java目录中的*.xml文件也进行打包 -->
