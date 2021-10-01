@@ -20,7 +20,21 @@ spring:
         max-wait: -1
         max-idle: 8
         min-idle: 0
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 # nacos
 
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 600000
+
+logging:
+  level:
+    com.atguigu.srb.sms.client.CoreUserInfoClient: DEBUG
 #阿里云短信
 aliyun:
   sms:

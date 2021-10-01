@@ -3,6 +3,7 @@ package com.atguigu.srb.sms.controller.api;
 import com.atguigu.common.exception.Assert;
 import com.atguigu.common.result.R;
 import com.atguigu.common.result.ResponseEnum;
+import com.atguigu.srb.sms.client.CoreUserInfoClient;
 import com.atguigu.srb.sms.service.SmsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,6 +30,9 @@ public class ApiSmsController {
     @Resource
     private RedisTemplate redisTemplate;
 
+    @Resource
+    private CoreUserInfoClient coreUserInfoClient;
+
     @ApiOperation("获取验证码")
     @GetMapping("/send/{mobile}")
     public R send(
@@ -37,6 +41,10 @@ public class ApiSmsController {
 
         Assert.notEmpty(mobile, ResponseEnum.MOBILE_NULL_ERROR);
         Assert.isTrue(RegexValidateUtils.checkCellphone(mobile), ResponseEnum.MOBILE_ERROR);
+       // Check if the mobile is registered
+        boolean result = coreUserInfoClient.checkMobile(mobile);
+        //System.out.println("result = " + result);
+        Assert.isTrue(result == false, ResponseEnum.MOBILE_EXIST_ERROR);
 
         String code = RandomUtils.getFourBitRandom();
         Map<String,Object> param = new HashMap<>();
