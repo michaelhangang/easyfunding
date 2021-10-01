@@ -32,6 +32,9 @@ feign:
         connectTimeout: 10000
         readTimeout: 600000
 
+  sentinel:
+    enabled: true
+
 logging:
   level:
     com.atguigu.srb.sms.client.CoreUserInfoClient: DEBUG
