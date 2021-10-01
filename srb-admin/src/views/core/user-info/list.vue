@@ -96,10 +96,24 @@
           >
             解锁
           </el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            @click="showLoginRecord(scope.row.id)"
+          >
+            登录日志
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
-
+    <!-- Login record dialog -->
+    <el-dialog title="用户登录日志" :visible.sync="dialogTableVisible">
+      <el-table :data="loginRecordList" border stripe>
+        <el-table-column type="index" />
+        <el-table-column prop="ip" label="IP" />
+        <el-table-column prop="createTime" label="登录时间" />
+      </el-table>
+    </el-dialog>
     <!-- 分页组件 -->
     <el-pagination
       :current-page="page"
@@ -165,6 +179,14 @@ export default {
       userInfoApi.lock(id, status).then(response => {
         this.$message.success(response.message)
         this.fetchData()
+      })
+    },
+    // Show login record
+    showLoginRecord(id) {
+      // Open dialog
+      this.dialogTableVisible = true
+      userInfoApi.getuserLoginRecordTop50(id).then(response => {
+        this.loginRecordList = response.data.list
       })
     }
   }
