@@ -24,7 +24,7 @@ export default function({ $axios, redirect }) {
       console.log('用户校验失败')
       // debugger
       cookie.set('userInfo', '')
-      window.location.href = '/'
+      window.location.href = '/login'
     } else {
       Message({
         message: response.data.message,
