@@ -230,8 +230,13 @@ export default {
   },
   methods: {
     save() {
+      // debugger
       this.submitBtnDisabled = true
-      this.active = 1
+      this.$axios
+          .$post('/api/core/borrower/auth/save', this.borrower)
+          .then((response) => {
+            this.active = 1
+          })
     },
     onUploadSuccessIdCard1(response, file) {
       this.onUploadSuccess(response, file, 'idCard1')
