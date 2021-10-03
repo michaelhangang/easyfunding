@@ -210,23 +210,23 @@ export default {
     let BASE_API = process.env.BASE_API
 
     return {
-      active: 0, //步骤
+      active: null, //步骤
       borrowerStatus: null,
       submitBtnDisabled: false,
-      //借款人信息
+      // Borrower info
       borrower: {
         borrowerAttachList: [],
       },
-      educationList: [], //学历列表
-      industryList: [], //行业列表
-      incomeList: [], //月收入列表
-      returnSourceList: [], //还款来源列表
-      contactsRelationList: [], //联系人关系
-      uploadUrl: BASE_API + '/api/oss/file/upload', //文件上传地址
+      educationList: [],
+      industryList: [],
+      incomeList: [],
+      returnSourceList: [],
+      contactsRelationList: [],
+      uploadUrl: BASE_API + '/api/oss/file/upload',
     }
   },
   created() {
-    this.initSelected()
+    this.getUserInfo()
   },
   methods: {
     save() {
@@ -236,6 +236,29 @@ export default {
           .$post('/api/core/borrower/auth/save', this.borrower)
           .then((response) => {
             this.active = 1
+          })
+    },
+    // Get borrower status
+    getUserInfo() {
+      this.$axios
+          .$get('/api/core/borrower/auth/getBorrowerStatus')
+          .then((response) => {
+            this.borrowerStatus = response.data.borrowerStatus
+            if (this.borrowerStatus === 0) {
+              //未认证
+              this.active = 0
+              //获取下拉列表
+              this.initSelected()
+            } else if (this.borrowerStatus === 1) {
+              //认证中
+              this.active = 1
+            } else if (this.borrowerStatus === 2) {
+              //认证成功
+              this.active = 2
+            } else if (this.borrowerStatus === -1) {
+              //认证失败
+              this.active = 2
+            }
           })
     },
     onUploadSuccessIdCard1(response, file) {

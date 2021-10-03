@@ -8,4 +8,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface BorrowerService extends IService<Borrower> {
 
     void saveBorrowerVOByUserId(BorrowerVO borrowerVO, Long userId);
+
+    Integer getStatusByUserId(Long userId);
 }
