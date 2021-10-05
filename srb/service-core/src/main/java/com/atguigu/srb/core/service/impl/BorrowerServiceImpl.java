@@ -10,10 +10,13 @@ import com.atguigu.srb.core.pojo.entity.UserInfo;
 import com.atguigu.srb.core.pojo.vo.BorrowerVO;
 import com.atguigu.srb.core.service.BorrowerService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -74,5 +77,20 @@ public class BorrowerServiceImpl extends ServiceImpl<BorrowerMapper, Borrower> i
         }
         Integer status = (Integer)objects.get(0);
         return status;
+    }
+    @Override
+    public IPage<Borrower> listPage(Page<Borrower> pageParam, String keyword) {
+
+        QueryWrapper<Borrower> borrowerQueryWrapper = new QueryWrapper<>();
+
+        if(StringUtils.isEmpty(keyword)){
+            return baseMapper.selectPage(pageParam, null);
+        }
+
+        borrowerQueryWrapper.like("name", keyword)
+                .or().like("id_card", keyword)
+                .or().like("mobile", keyword)
+                .orderByDesc("id");
+        return baseMapper.selectPage(pageParam, borrowerQueryWrapper);
     }
 }
