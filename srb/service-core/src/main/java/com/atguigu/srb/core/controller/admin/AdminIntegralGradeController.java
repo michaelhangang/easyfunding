@@ -7,12 +7,15 @@ import com.atguigu.srb.core.pojo.entity.IntegralGrade;
 import com.atguigu.srb.core.service.IntegralGradeService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 //@CrossOrigin
+@Slf4j
 @RestController
 @RequestMapping("/admin/core/integralGrade")
 public class AdminIntegralGradeController {
@@ -20,6 +23,8 @@ public class AdminIntegralGradeController {
     @Resource
     private IntegralGradeService integralGradeService;
 
+    @Resource
+    private Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer;
     @ApiOperation("Point level list")
     @GetMapping("/list")
     public R listAll() {
@@ -74,6 +79,7 @@ public class AdminIntegralGradeController {
     public R updateById(
             @ApiParam(value = "Points level object", required = true)
             @RequestBody IntegralGrade integralGrade){
+
         boolean result = integralGradeService.updateById(integralGrade);
         if(result){
             return R.ok().message("Successfully modified");
