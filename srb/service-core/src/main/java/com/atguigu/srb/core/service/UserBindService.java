@@ -8,6 +8,6 @@ import java.util.Map;
 
 public interface UserBindService extends IService<UserBind> {
     String commitBindUser(UserBindVO userBindVO, Long userId);
-
+    String getBindCodeByUserId(Long userId);
     void notify(Map<String, Object> paramMap);
 }
