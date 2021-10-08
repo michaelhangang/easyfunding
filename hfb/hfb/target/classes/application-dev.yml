@@ -18,7 +18,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:33067/db_hfb?serverTimezone=GMT%2B8&characterEncoding=utf-8
     username: root
-    password: 
+    password:
     hikari:
       connection-test-query: SELECT 1
       connection-timeout: 60000
