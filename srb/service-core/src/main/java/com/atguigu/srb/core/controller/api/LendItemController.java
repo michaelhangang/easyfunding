@@ -1,7 +1,9 @@
 package com.atguigu.srb.core.controller.api;
 
+import com.alibaba.fastjson.JSON;
 import com.atguigu.common.result.R;
 import com.atguigu.srb.base.util.JwtUtils;
+import com.atguigu.srb.core.hfb.RequestHelper;
 import com.atguigu.srb.core.pojo.vo.InvestVO;
 import com.atguigu.srb.core.service.LendItemService;
 import io.swagger.annotations.Api;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @Api(tags = "标的的投资")
 @RestController
@@ -36,5 +39,27 @@ public class LendItemController {
 
         String formStr = lendItemService.commitInvest(investVO);
         return R.ok().data("formStr", formStr);
+    }
+
+    @ApiOperation("会员投资异步回调")
+    @PostMapping("/notify")
+    public String notify(HttpServletRequest request) {
+
+        Map<String, Object> paramMap = RequestHelper.switchMap(request.getParameterMap());
+        log.info("用户投资异步回调：" + JSON.toJSONString(paramMap));
+
+        // Validate Sign P2pInvestNotifyVo
+        if(RequestHelper.isSignEquals(paramMap)) {
+            if("0001".equals(paramMap.get("resultCode"))) {
+                lendItemService.notify(paramMap);
+            } else {
+                log.info("用户投资异步回调失败：" + JSON.toJSONString(paramMap));
+                return "fail";
+            }
+        } else {
+            log.info("用户投资异步回调签名错误：" + JSON.toJSONString(paramMap));
+            return "fail";
+        }
+        return "success";
     }
 }
