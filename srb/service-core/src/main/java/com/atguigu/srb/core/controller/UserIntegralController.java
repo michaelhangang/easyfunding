@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
  * 用户积分记录表 前端控制器
  * </p>
  *
- * @author Ganghan
- * @since 2021-09-26
+ * @author Helen
+ * @since 2021-02-20
  */
 @RestController
 @RequestMapping("/userIntegral")

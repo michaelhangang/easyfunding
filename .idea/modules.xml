@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/easyfunding.iml" filepath="$PROJECT_DIR$/.idea/easyfunding.iml" />
       <module fileurl="file://$PROJECT_DIR$/srb/guigu-common/guigu-common.iml" filepath="$PROJECT_DIR$/srb/guigu-common/guigu-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/srb/rabbit-mq/rabbit-mq.iml" filepath="$PROJECT_DIR$/srb/rabbit-mq/rabbit-mq.iml" />
       <module fileurl="file://$PROJECT_DIR$/srb/service-base/service-base.iml" filepath="$PROJECT_DIR$/srb/service-base/service-base.iml" />
       <module fileurl="file://$PROJECT_DIR$/srb/service-core/service-core.iml" filepath="$PROJECT_DIR$/srb/service-core/service-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/srb/service-gateway/service-gateway.iml" filepath="$PROJECT_DIR$/srb/service-gateway/service-gateway.iml" />

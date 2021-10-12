@@ -30,11 +30,12 @@ public class AdminBorrowInfoController {
         return R.ok().data("list", borrowInfoList);
     }
 
-    @ApiOperation("获取借款信息")
+    @ApiOperation("借款信息详情")
     @GetMapping("/show/{id}")
     public R show(
-            @ApiParam(value = "借款id", required = true)
-            @PathVariable Long id) {
+            @ApiParam(value = "借款信息id", required = true)
+            @PathVariable Long id){
+
         Map<String, Object> borrowInfoDetail = borrowInfoService.getBorrowInfoDetail(id);
         return R.ok().data("borrowInfoDetail", borrowInfoDetail);
     }
@@ -44,6 +45,6 @@ public class AdminBorrowInfoController {
     public R approval(@RequestBody BorrowInfoApprovalVO borrowInfoApprovalVO) {
 
         borrowInfoService.approval(borrowInfoApprovalVO);
-        return R.ok().message("Approval complete!");
+        return R.ok().message("审批完成");
     }
 }

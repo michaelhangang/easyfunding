@@ -7,15 +7,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- * 还款记录表 前端控制器
+ * 操作行为记录表 前端控制器
  * </p>
  *
- * @author Ganghan
- * @since 2021-09-26
+ * @author Helen
+ * @since 2021-02-20
  */
 @RestController
-@RequestMapping("/lendReturn")
-public class LendReturnController {
+@RequestMapping("/operateAction")
+public class OperateActionController {
 
 }
 

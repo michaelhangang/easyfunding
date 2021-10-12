@@ -9,7 +9,12 @@ import org.springframework.context.annotation.ComponentScan;
 public class ServiceCoreApplication {
 
     public static void main(String[] args) {
+        try{
             SpringApplication.run(ServiceCoreApplication.class, args);
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
 
     }
 }

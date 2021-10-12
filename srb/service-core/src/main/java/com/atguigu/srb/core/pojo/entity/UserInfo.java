@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -17,16 +18,19 @@ import java.time.LocalDateTime;
  * 用户基本信息
  * </p>
  *
- * @author Ganghan
- * @since 2021-09-26
+ * @author Helen
+ * @since 2021-02-20
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="UserInfo对象", description="用户基本信息")
 public class UserInfo implements Serializable {
 
-    public static final Integer STATUS_NORMAL = 1;
-    public static final Integer STATUS_LOCKED = 0;
+    public static  final Integer STATUS_NORMAL = 1;
+    public static  final Integer STATUS_LOCKED = 0;
+    public static final String USER_AVATAR = "https://srb-file-200921.oss-cn-beijing.aliyuncs.com/avatar/01.jpg";
+
+    private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "编号")
       @TableId(value = "id", type = IdType.AUTO)
@@ -75,6 +79,7 @@ public class UserInfo implements Serializable {
     private Integer status;
 
     @ApiModelProperty(value = "创建时间")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "更新时间")

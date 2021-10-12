@@ -27,8 +27,9 @@ public class DictController {
     @ApiOperation("根据dictCode获取下级节点")
     @GetMapping("/findByDictCode/{dictCode}")
     public R findByDictCode(
-            @ApiParam(value = "节点编码", required = true)
-            @PathVariable String dictCode) {
+            @ApiParam(value ="节点编码", required = true)
+            @PathVariable String dictCode){
+
         List<Dict> list = dictService.findByDictCode(dictCode);
         return R.ok().data("dictList", list);
     }

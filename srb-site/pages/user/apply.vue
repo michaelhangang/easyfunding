@@ -178,6 +178,29 @@ export default {
           })
     },
 
+    initSelected() {
+
+      this.$axios
+          .$get('/api/core/dict/findByDictCode/returnMethod')
+          .then((response) => {
+            this.returnMethodList = response.data.dictList
+          })
+
+
+      this.$axios
+          .$get('/api/core/dict/findByDictCode/moneyUse')
+          .then((response) => {
+            this.moneyUseList = response.data.dictList
+          })
+    },
+
+    getBorrowAmount() {
+      this.$axios
+          .$get('/api/core/borrowInfo/auth/getBorrowAmount')
+          .then((response) => {
+            this.borrowAmount = response.data.borrowAmount
+          })
+    },
     save() {
       // this.submitBtnDisabled = true
       this.$axios

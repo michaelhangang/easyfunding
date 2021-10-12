@@ -1,5 +1,6 @@
 package com.atguigu.srb.core.controller.admin;
 
+
 import com.atguigu.common.result.R;
 import com.atguigu.srb.core.pojo.entity.Lend;
 import com.atguigu.srb.core.service.LendService;
@@ -16,6 +17,14 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <p>
+ * 标的准备表 前端控制器
+ * </p>
+ *
+ * @author Helen
+ * @since 2021-02-20
+ */
 @Api(tags = "标的管理")
 @RestController
 @RequestMapping("/admin/core/lend")

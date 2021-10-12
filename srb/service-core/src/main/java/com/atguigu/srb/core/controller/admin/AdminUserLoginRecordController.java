@@ -1,5 +1,6 @@
 package com.atguigu.srb.core.controller.admin;
 
+
 import com.atguigu.common.result.R;
 import com.atguigu.srb.core.pojo.entity.UserLoginRecord;
 import com.atguigu.srb.core.service.UserLoginRecordService;
@@ -12,6 +13,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * <p>
+ * 用户登录记录表 前端控制器
+ * </p>
+ *
+ * @author Helen
+ * @since 2021-02-20
+ */
 @Api(tags = "会员登录日志接口")
 @RestController
 @RequestMapping("/admin/core/userLoginRecord")
@@ -25,9 +34,11 @@ public class AdminUserLoginRecordController {
     @ApiOperation("获取会员登录日志列表")
     @GetMapping("/listTop50/{userId}")
     public R listTop50(
-            @ApiParam(value = "id", required = true)
-            @PathVariable Long userId) {
+            @ApiParam(value ="用户id", required = true)
+            @PathVariable Long userId){
+
         List<UserLoginRecord> userLoginRecordList = userLoginRecordService.listTop50(userId);
         return R.ok().data("list", userLoginRecordList);
     }
 }
+

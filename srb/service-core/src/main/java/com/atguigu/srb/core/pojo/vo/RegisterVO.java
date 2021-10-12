@@ -1,5 +1,6 @@
 package com.atguigu.srb.core.pojo.vo;
 
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -7,8 +8,7 @@ import lombok.Data;
 @Data
 @ApiModel(description="注册对象")
 public class RegisterVO {
-    public static final Integer STATUS_NORMAL = 1;
-    public static final Integer STATUS_LOCKED = 0;
+
     @ApiModelProperty(value = "用户类型")
     private Integer userType;
 

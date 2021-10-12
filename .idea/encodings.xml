@@ -2,6 +2,7 @@
 <project version="4">
   <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
     <file url="file://$PROJECT_DIR$/srb/guigu-common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/srb/rabbit-mq/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/srb/service-base/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/srb/service-core/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/srb/service-gateway/src/main/java" charset="UTF-8" />

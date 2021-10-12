@@ -16,11 +16,12 @@ import java.util.List;
  * 借款人上传资源表 服务实现类
  * </p>
  *
- * @author Ganghan
- * @since 2021-09-26
+ * @author Helen
+ * @since 2021-02-20
  */
 @Service
 public class BorrowerAttachServiceImpl extends ServiceImpl<BorrowerAttachMapper, BorrowerAttach> implements BorrowerAttachService {
+
     @Override
     public List<BorrowerAttachVO> selectBorrowerAttachVOList(Long borrowerId) {
 

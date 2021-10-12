@@ -9,7 +9,16 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * <p>
+ * 标的准备表 服务类
+ * </p>
+ *
+ * @author Helen
+ * @since 2021-02-20
+ */
 public interface LendService extends IService<Lend> {
+
     void createLend(BorrowInfoApprovalVO borrowInfoApprovalVO, BorrowInfo borrowInfo);
 
     List<Lend> selectList();
@@ -18,7 +27,7 @@ public interface LendService extends IService<Lend> {
 
     BigDecimal getInterestCount(BigDecimal invest, BigDecimal yearRate, Integer totalmonth, Integer returnMethod);
 
-    //void makeLoan(Long id);
+    void makeLoan(Long id);
 
-    void makeLoan(Long lendId);
+
 }

@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
  * 积分等级表 服务实现类
  * </p>
  *
- * @author Ganghan
- * @since 2021-09-26
+ * @author Helen
+ * @since 2021-02-20
  */
 @Service
 public class IntegralGradeServiceImpl extends ServiceImpl<IntegralGradeMapper, IntegralGrade> implements IntegralGradeService {

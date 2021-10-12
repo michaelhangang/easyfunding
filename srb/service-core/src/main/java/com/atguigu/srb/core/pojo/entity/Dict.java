@@ -12,6 +12,14 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * <p>
+ * 数据字典
+ * </p>
+ *
+ * @author Helen
+ * @since 2021-02-20
+ */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="Dict对象", description="数据字典")
@@ -36,7 +44,7 @@ public class Dict implements Serializable {
     private String dictCode;
 
     @ApiModelProperty(value = "创建时间")
-    private LocalDateTime createTime;
+    private LocalDateTime createTime; //代替了 Date    “createTime”：“2020-01-01 01:01:01”
 
     @ApiModelProperty(value = "更新时间")
     private LocalDateTime updateTime;
@@ -46,8 +54,6 @@ public class Dict implements Serializable {
     @TableLogic
     private Boolean deleted;
 
-    @ApiModelProperty(value = "是否包含子节点")
-    @TableField(exist = false)//在数据库表中忽略此列
+    @TableField(exist = false) //表达逻辑概念的属性，和物理表没有关系，当前字段不存在于物理表中
     private boolean hasChildren;
-
 }

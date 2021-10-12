@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
  * 用户积分记录表 服务实现类
  * </p>
  *
- * @author Ganghan
- * @since 2021-09-26
+ * @author Helen
+ * @since 2021-02-20
  */
 @Service
 public class UserIntegralServiceImpl extends ServiceImpl<UserIntegralMapper, UserIntegral> implements UserIntegralService {

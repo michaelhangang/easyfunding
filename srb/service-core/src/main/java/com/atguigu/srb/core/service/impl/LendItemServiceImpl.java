@@ -18,7 +18,6 @@ import com.atguigu.srb.core.service.*;
 import com.atguigu.srb.core.util.LendNoUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,17 +33,14 @@ import java.util.Map;
  * 标的出借记录表 服务实现类
  * </p>
  *
- * @author Ganghan
- * @since 2021-09-26
+ * @author Helen
+ * @since 2021-02-20
  */
 @Service
-@Slf4j
 public class LendItemServiceImpl extends ServiceImpl<LendItemMapper, LendItem> implements LendItemService {
-    @Resource
-    private LendMapper lendMapper;
 
     @Resource
-    private LendService lendService;
+    private LendMapper lendMapper;
 
     @Resource
     private UserAccountService userAccountService;
@@ -52,32 +48,43 @@ public class LendItemServiceImpl extends ServiceImpl<LendItemMapper, LendItem> i
     @Resource
     private UserBindService userBindService;
 
+    @Resource
+    private LendService lendService;
+
+    @Resource
+    private TransFlowService transFlowService;
+
+    @Resource
+    private UserAccountMapper userAccountMapper;
+
 
     @Override
     public String commitInvest(InvestVO investVO) {
 
+        //健壮性的校验
         Long lendId = investVO.getLendId();
-
         Lend lend = lendMapper.selectById(lendId);
 
-        //标的状态必须为募资中  Lend status must be in Run
+        //判断标的状态为募资中
         Assert.isTrue(
                 lend.getStatus().intValue() == LendStatusEnum.INVEST_RUN.getStatus().intValue(),
                 ResponseEnum.LEND_INVEST_ERROR);
 
-        //标的不能超卖：(已投金额 + 本次投资金额 )>=标的金额（超卖）
+        //超卖：已投金额 + 当前投资金额 <= 标的金额（正常）
         BigDecimal sum = lend.getInvestAmount().add(new BigDecimal(investVO.getInvestAmount()));
-        Assert.isTrue(sum.doubleValue() <= lend.getAmount().doubleValue(),
+        Assert.isTrue(
+                sum.doubleValue() <= lend.getAmount().doubleValue(),
                 ResponseEnum.LEND_FULL_SCALE_ERROR);
 
-        //账户可用余额充足：当前用户的余额 >= 当前用户的投资金额（可以投资）
+        //用户余额：当前用户的余额 >= 当前投资金额
         Long investUserId = investVO.getInvestUserId();
-        BigDecimal amount = userAccountService.getAccount(investUserId);//获取当前用户的账户余额
-        Assert.isTrue(amount.doubleValue() >= Double.parseDouble(investVO.getInvestAmount()),
+        BigDecimal amount = userAccountService.getAccount(investUserId);
+        Assert.isTrue(
+                amount.doubleValue() >= Double.parseDouble(investVO.getInvestAmount()),
                 ResponseEnum.NOT_SUFFICIENT_FUNDS_ERROR);
 
-        //在商户平台中生成投资信息==========================================
-        //标的下的投资信息
+        //获取paramMap中需要的参数
+        //生成标的下的投资记录
         LendItem lendItem = new LendItem();
         lendItem.setInvestUserId(investUserId);//投资人id
         lendItem.setInvestName(investVO.getInvestName());//投资人名字
@@ -101,15 +108,13 @@ public class LendItemServiceImpl extends ServiceImpl<LendItemMapper, LendItem> i
         //实际收益
         lendItem.setRealAmount(new BigDecimal(0));
 
-        lendItem.setStatus(0);//默认状态：刚刚创建
-        baseMapper.insert(lendItem);
+        //投资记录的状态
+        lendItem.setStatus(0);//刚刚创建投资记录，账户信息尚未修改
+        baseMapper.insert(lendItem);//存入数据库
 
-
-        //组装投资相关的参数，提交到汇付宝资金托管平台==========================================
-        //在托管平台同步用户的投资信息，修改用户的账户资金信息==========================================
-        //获取投资人的绑定协议号
+        //获取投资人的bindCode
         String bindCode = userBindService.getBindCodeByUserId(investUserId);
-        //获取借款人的绑定协议号
+        //获取借款人的bindCode
         String benefitBindCode = userBindService.getBindCodeByUserId(lend.getUserId());
 
         //封装提交至汇付宝的参数
@@ -120,7 +125,7 @@ public class LendItemServiceImpl extends ServiceImpl<LendItemMapper, LendItem> i
         paramMap.put("agentProjectCode", lend.getLendNo());//项目标号
         paramMap.put("agentProjectName", lend.getTitle());
 
-        //在资金托管平台上的投资订单的唯一编号，要和lendItemNo保持一致。
+        //在资金托管平台上的投资订单的唯一编号，可以独立生成，不一定非要和lendItemNo保持一致，但是可以一致。
         paramMap.put("agentBillNo", lendItemNo);//订单编号
         paramMap.put("voteAmt", investVO.getInvestAmount());
         paramMap.put("votePrizeAmt", "0");
@@ -138,70 +143,59 @@ public class LendItemServiceImpl extends ServiceImpl<LendItemMapper, LendItem> i
         return formStr;
     }
 
-    @Resource
-    private TransFlowService transFlowService;
-
-    @Resource
-    private UserAccountMapper userAccountMapper;
-
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void notify(Map<String, Object> paramMap) {
 
-        log.info("投标成功");
-
-        //获取投资编号
+        //幂等性返回
         String agentBillNo = (String)paramMap.get("agentBillNo");
-
         boolean result = transFlowService.isSaveTransFlow(agentBillNo);
         if(result){
             log.warn("幂等性返回");
             return;
         }
 
-        //获取用户的绑定协议号
-        String bindCode = (String)paramMap.get("voteBindCode");
+        //修改账户金额：从余额中减去投资金额，在冻结金额中增加投资进入
+        String voteBindCode = (String)paramMap.get("voteBindCode");
         String voteAmt = (String)paramMap.get("voteAmt");
 
-        //修改商户系统中的用户账户金额：余额、冻结金额
-        userAccountMapper.updateAccount(bindCode, new BigDecimal("-" + voteAmt), new BigDecimal(voteAmt));
+        userAccountMapper.updateAccount(
+                voteBindCode,
+                new BigDecimal("-" + voteAmt),
+                new BigDecimal(voteAmt));
 
-        //修改投资记录的投资状态改为已支付
-        LendItem lendItem = this.getByLendItemNo(agentBillNo);
-        lendItem.setStatus(1);//已支付
+        //修改投资记录的状态
+        LendItem lendItem = this.getByLenItemNo(agentBillNo);
+        lendItem.setStatus(1);
         baseMapper.updateById(lendItem);
 
-        //修改标的信息：投资人数、已投金额
+        //修改标的记录：投资人数、已投金额
         Long lendId = lendItem.getLendId();
         Lend lend = lendMapper.selectById(lendId);
         lend.setInvestNum(lend.getInvestNum() + 1);
         lend.setInvestAmount(lend.getInvestAmount().add(lendItem.getInvestAmount()));
         lendMapper.updateById(lend);
 
-        //新增交易流水
+        //记录账户流水
         TransFlowBO transFlowBO = new TransFlowBO(
                 agentBillNo,
-                bindCode,
+                voteBindCode,
                 new BigDecimal(voteAmt),
                 TransTypeEnum.INVEST_LOCK,
-                "投资项目编号：" + lend.getLendNo() + "，项目名称：" + lend.getTitle());
+                "项目编号：" + lend.getLendNo() + "，项目名称" + lend.getTitle());
         transFlowService.saveTransFlow(transFlowBO);
-    }
 
-    private LendItem getByLendItemNo(String lendItemNo) {
-        QueryWrapper<LendItem> queryWrapper = new QueryWrapper();
-        queryWrapper.eq("lend_item_no", lendItemNo);
-        return baseMapper.selectOne(queryWrapper);
     }
 
     @Override
     public List<LendItem> selectByLendId(Long lendId, Integer status) {
-        QueryWrapper<LendItem> queryWrapper = new QueryWrapper();
-        queryWrapper.eq("lend_id", lendId);
-        queryWrapper.eq("status", status);
-        List<LendItem> lendItemList = baseMapper.selectList(queryWrapper);
-        return lendItemList;
+        QueryWrapper<LendItem> lendItemQueryWrapper = new QueryWrapper<>();
+        lendItemQueryWrapper
+                .eq("lend_id", lendId)
+                .eq("status", status);
+        return baseMapper.selectList(lendItemQueryWrapper);
     }
+
     @Override
     public List<LendItem> selectByLendId(Long lendId) {
         QueryWrapper<LendItem> queryWrapper = new QueryWrapper();
@@ -210,4 +204,14 @@ public class LendItemServiceImpl extends ServiceImpl<LendItemMapper, LendItem> i
         return lendItemList;
     }
 
+    /**
+     * 根据流水号获取投资记录
+     * @param lendItemNo
+     * @return
+     */
+    private LendItem getByLenItemNo(String lendItemNo){
+        QueryWrapper<LendItem> lendItemQueryWrapper = new QueryWrapper<>();
+        lendItemQueryWrapper.eq("lend_item_no", lendItemNo);
+        return baseMapper.selectOne(lendItemQueryWrapper);
+    }
 }

@@ -20,8 +20,8 @@ import java.util.Map;
  * 借款信息表
  * </p>
  *
- * @author Ganghan
- * @since 2021-09-26
+ * @author Helen
+ * @since 2021-02-20
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -52,7 +52,7 @@ public class BorrowInfo implements Serializable {
     @ApiModelProperty(value = "资金用途")
     private Integer moneyUse;
 
-    @ApiModelProperty(value = "状态（0：未提交，1：审核中， 2：审核通过， -1：审核不通过）")
+    @ApiModelProperty(value = "状态（0：默认 1：审核通过 -1：审核不通过）")
     private Integer status;
 
     @ApiModelProperty(value = "创建时间")
@@ -66,6 +66,8 @@ public class BorrowInfo implements Serializable {
     @TableLogic
     private Boolean deleted;
 
+
+    //扩展字段
     @ApiModelProperty(value = "姓名")
     @TableField(exist = false)
     private String name;

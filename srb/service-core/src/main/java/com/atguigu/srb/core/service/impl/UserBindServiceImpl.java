@@ -27,41 +27,46 @@ import java.util.Map;
  * 用户绑定表 服务实现类
  * </p>
  *
- * @author Ganghan
- * @since 2021-09-26
+ * @author Helen
+ * @since 2021-02-20
  */
 @Service
 public class UserBindServiceImpl extends ServiceImpl<UserBindMapper, UserBind> implements UserBindService {
+
+    @Resource
+    private UserInfoMapper userInfoMapper;
+
+
     @Override
     public String commitBindUser(UserBindVO userBindVO, Long userId) {
 
+        //不同的user_id, 相同的身份证，如果存在，则不允许
         QueryWrapper<UserBind> userBindQueryWrapper = new QueryWrapper<>();
         userBindQueryWrapper
                 .eq("id_card", userBindVO.getIdCard())
                 .ne("user_id", userId);
         UserBind userBind = baseMapper.selectOne(userBindQueryWrapper);
-        //USER_BIND_IDCARD_EXIST_ERROR(-301, "身份证号码已绑定"),
         Assert.isNull(userBind, ResponseEnum.USER_BIND_IDCARD_EXIST_ERROR);
 
-        //查询用户绑定信息 Query
+        //用户是否曾经填写过绑定表单
         userBindQueryWrapper = new QueryWrapper<>();
         userBindQueryWrapper.eq("user_id", userId);
         userBind = baseMapper.selectOne(userBindQueryWrapper);
 
-        //判断是否有绑定记录
-        if(userBind == null) {
-            //如果未创建绑定记录，则创建一条记录
+        if(userBind == null){
+            //创建用户绑定记录
             userBind = new UserBind();
             BeanUtils.copyProperties(userBindVO, userBind);
             userBind.setUserId(userId);
             userBind.setStatus(UserBindEnum.NO_BIND.getStatus());
             baseMapper.insert(userBind);
-        } else {
-            //曾经跳转到托管平台，但是未操作完成，此时将用户最新填写的数据同步到userBind对象
+        }else{
+            //相同的user_id，如果存在，那么就取出数据，做更新
             BeanUtils.copyProperties(userBindVO, userBind);
             baseMapper.updateById(userBind);
         }
 
+        //组装自动提交表单的参数
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("agentId", HfbConst.AGENT_ID);
         paramMap.put("agentUserId", userId);
@@ -75,20 +80,16 @@ public class UserBindServiceImpl extends ServiceImpl<UserBindMapper, UserBind> i
         paramMap.put("timestamp", RequestHelper.getTimestamp());
         paramMap.put("sign", RequestHelper.getSign(paramMap));
 
-        //构建充值自动提交表单
+        //生成动态表单字符串
         String formStr = FormHelper.buildForm(HfbConst.USERBIND_URL, paramMap);
         return formStr;
-
     }
-    @Resource
-    private UserInfoMapper userInfoMapper;
 
-    @Override
     @Transactional(rollbackFor = Exception.class)
+    @Override
     public void notify(Map<String, Object> paramMap) {
 
         String bindCode = (String)paramMap.get("bindCode");
-        //会员id
         String agentUserId = (String)paramMap.get("agentUserId");
 
         //根据user_id查询user_bind记录
@@ -111,11 +112,11 @@ public class UserBindServiceImpl extends ServiceImpl<UserBindMapper, UserBind> i
     }
 
     @Override
-    public String getBindCodeByUserId(Long userId){
+    public String getBindCodeByUserId(Long userId) {
+
         QueryWrapper<UserBind> userBindQueryWrapper = new QueryWrapper<>();
         userBindQueryWrapper.eq("user_id", userId);
         UserBind userBind = baseMapper.selectOne(userBindQueryWrapper);
-        String bindCode = userBind.getBindCode();
-        return bindCode;
+        return userBind.getBindCode();
     }
 }

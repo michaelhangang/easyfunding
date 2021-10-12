@@ -21,8 +21,8 @@ import java.util.Map;
  * 标的准备表
  * </p>
  *
- * @author Ganghan
- * @since 2021-09-26
+ * @author Helen
+ * @since 2021-02-20
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -118,5 +118,4 @@ public class Lend implements Serializable {
     @ApiModelProperty(value = "其他参数")
     @TableField(exist = false)
     private Map<String,Object> param = new HashMap<>();
-
 }

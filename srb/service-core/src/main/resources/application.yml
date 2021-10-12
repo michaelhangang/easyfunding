@@ -28,6 +28,13 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848 # nacos
+
+  rabbitmq:
+    host: 192.168.40.128
+    port: 15672
+    virtual-host: /srbhost
+    username: srbuser
+    password: 123456
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

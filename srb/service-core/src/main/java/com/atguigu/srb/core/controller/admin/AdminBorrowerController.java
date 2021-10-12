@@ -37,7 +37,7 @@ public class AdminBorrowerController {
             @RequestParam String keyword) {
 
         Page<Borrower> pageParam = new Page<>(page, limit);
-        IPage<Borrower> pageModel = borrowerService.listPage(pageParam, keyword);
+        IPage<Borrower> pageModel =  borrowerService.listPage(pageParam, keyword);
         return R.ok().data("pageModel", pageModel);
     }
 
@@ -45,15 +45,16 @@ public class AdminBorrowerController {
     @GetMapping("/show/{id}")
     public R show(
             @ApiParam(value = "借款人id", required = true)
-            @PathVariable Long id) {
+            @PathVariable Long id){
+
         BorrowerDetailVO borrowerDetailVO = borrowerService.getBorrowerDetailVOById(id);
         return R.ok().data("borrowerDetailVO", borrowerDetailVO);
     }
 
     @ApiOperation("借款额度审批")
     @PostMapping("/approval")
-    public R approval(@RequestBody BorrowerApprovalVO borrowerApprovalVO) {
+    public R approval(@RequestBody BorrowerApprovalVO borrowerApprovalVO){
         borrowerService.approval(borrowerApprovalVO);
-        return R.ok().message("Approval completed.");
+        return R.ok().message("审批完成");
     }
 }

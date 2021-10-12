@@ -16,8 +16,8 @@ import lombok.EqualsAndHashCode;
  * 用户绑定表
  * </p>
  *
- * @author Ganghan
- * @since 2021-09-26
+ * @author Helen
+ * @since 2021-02-20
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

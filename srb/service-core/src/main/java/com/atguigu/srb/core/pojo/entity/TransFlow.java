@@ -17,8 +17,8 @@ import lombok.EqualsAndHashCode;
  * 交易流水表
  * </p>
  *
- * @author Ganghan
- * @since 2021-09-26
+ * @author Helen
+ * @since 2021-02-20
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
