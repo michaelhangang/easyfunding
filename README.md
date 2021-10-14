@@ -1,17 +1,18 @@
 It is a Crowdfunding maven-based project to help startups raise capital. It includes a backstage content management system using single architecture and a membership system using a distributed microservices architecture. 
 
-1.Technique Architecture: 
-Front-end: Vue.js, Nuxt, Vue-admin-template, Element-UI, Axios, Node.js, NPM  
+# Technique Architecture:
+- Front-end: Vue.js, Nuxt, Vue-admin-template, Element-UI, Axios, Node.js, NPM
 
-Back-end: Spring Boot, Spring Cloud(Nacos, OpenFeign, Sentinel, Gateway), MyBatis Plus, MySQL, Redis, RabbitMQ, Alibaba Cloud(Object Storage Service, Short Message Service), Swagger2
+- Back-end: Spring Boot, Spring Cloud(Nacos, OpenFeign, Sentinel, Gateway), MyBatis Plus, MySQL, Redis, RabbitMQ, Alibaba Cloud(Object Storage Service, Short Message Service), Swagger2
 
-2.Files Structure
-srb: Back-end code base
-srb-admin: Front-end code base for admin pages
-srb-site: Front-end code base for membership system
-hfb: Virtual third-party fund custodian code page
+# Files Structure
+- srb: Back-end code base
+- srb-admin: Front-end code base for admin pages
+- srb-site: Front-end code base for membership system
+- hfb: Virtual third-party fund custodian code page
 
-3.Technique Details
+# Technique Details
+
 Spring Boot is used to build microservices including common api module, service-base api, core service, short message service and file storage service. Spring Cloud connects these microservices through Nacos, OpenFeign, Sentinel and Gateway. Nacos serves as services registry center to help manage the microservices. OpenFeign is used by a service to remotely call another microservice by simple declarative annotations. 
 
 When one service synchronously calls another, there's a possibility that another service can be down for some reason. In such a case, threads are blocked as they keep on waiting for the other service to respond. To prevent such scenarios, Sentinel blocks all subsequent calls immediately and use a fallback method to respond. In this project, when redis service is down, Sentinel breaks the call and directly query the MySql server. Gateway exposes port 80 to external requests as well as routes the requests to the services based on the service name. 
@@ -20,11 +21,11 @@ MyBatis Plus is a data persistence framework to support custom SQL. You are free
 
 RabbitMQ is a message queue server. When a user account is modified, a notice will be sent to a queue. Meanwhile, SMS service watching the queue receives the message in order to send a notification to the user. Swagger2 is used to format describing REST APIs as well as test the APIs.
 
-4.How to use it 
-Prerequisite:
-a. Make sure the Libraries are installed
-Vue, Vue-router, axios, Node.js, element-UI, Nuxt-app
-b. Start the servers in Linux 
-Nacos-server 1.4.0, Mysql-server, Redis, RabbitMQ
-c. Download all files in the 'File' folder
-show.css, hfb.sql, yyqp_hosp.sql, yyqh_manage.sql, srb_core.sql
+# How to use it 
+  Prerequisite:
+- Make sure the Libraries are installed
+(Vue, Vue-router, axios, Node.js, element-UI, Nuxt-app)
+- Start the servers in Linux 
+(Nacos-server 1.4.0, Mysql-server, Redis, RabbitMQ)
+- Download all files in the 'File' folder
+(show.css, hfb.sql, yyqp_hosp.sql, yyqh_manage.sql, srb_core.sql)
