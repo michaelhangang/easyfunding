@@ -20,4 +20,11 @@ MyBatis Plus is a data persistence framework to support custom SQL. You are free
 
 RabbitMQ is a message queue server. When a user account is modified, a notice will be sent to a queue. Meanwhile, SMS service watching the queue receives the message in order to send a notification to the user. Swagger2 is used to format describing REST APIs as well as test the APIs.
 
-4.How to use it (To be continued)
+4.How to use it 
+Prerequisite:
+a. Make sure the Libraries are installed
+Vue, Vue-router, axios, Node.js, element-UI, Nuxt-app
+b. Start the servers in Linux 
+Nacos-server 1.4.0, Mysql-server, Redis, RabbitMQ
+c. Download all files in the 'File' folder
+show.css, hfb.sql, yyqp_hosp.sql, yyqh_manage.sql, srb_core.sql
